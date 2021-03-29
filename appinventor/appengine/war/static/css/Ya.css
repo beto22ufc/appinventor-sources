@@ -325,6 +325,19 @@ body {
 }
 */
 
+.voice-bot-button {
+  background: #d2691e;
+  border: 0px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+
+.voice-bot-button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
 .ode-LogoText {
   font-size: 16px;
   color: grey;

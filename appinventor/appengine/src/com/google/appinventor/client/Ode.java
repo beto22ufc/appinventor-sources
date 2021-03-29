@@ -2557,5 +2557,63 @@ public class Ode implements EntryPoint {
   public static native void CLog(String message) /*-{
     console.log(message);
   }-*/;
+  
+  public static native void speechToText() /*-{
+    console.log("speechToText");
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+  
+    var recognition = new SpeechRecognition();
+
+    recognition.lang = "pt-BR";
+    recognition.continuos = false;
+    recognition.interimResults = false;
+    recognition.start();
+    console.log('Ready to receive a color command.');
+
+    recognition.onresult = function(event) {
+      console.log("entrou no recognition");
+      var i = 0;
+      for (i = event.resultIndex; i < event.results.length; i++) {
+        console.log("entrou no for");
+
+        var content = "";
+        if (event.results[i].isFinal) {
+          content = event.results[i][0].transcript.trim();
+        }
+        console.log('u: ', content);
+      };
+      recognition.stop();
+
+      function userIntentToServer (intent) {
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === this.DONE) {
+            var myJson = JSON.parse(xhr.responseText)[0];
+            console.log('a: ', myJson.text);
+
+            //text to speech
+            var msg = new SpeechSynthesisUtterance(myJson.text);
+            window.speechSynthesis.speak(msg);
+          }
+        });
+
+        xhr.open("POST", "http://localhost:5002/webhooks/rest/webhook/");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("crossDomain", "true");
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "'*'");
+        xhr.setRequestHeader("Content-Security-Policy", "default-src 'self' localhost;");
+
+        xhr.send(JSON.stringify({"message": intent}));
+      };
+
+      userIntentToServer(content);
+    }
+
+  }-*/;
 
 }

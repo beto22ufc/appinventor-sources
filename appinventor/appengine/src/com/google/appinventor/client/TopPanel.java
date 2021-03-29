@@ -229,14 +229,31 @@ public class TopPanel extends Composite {
     // to get around browsers that agressively cache the image! This
     // same trick is used in StorageUtil.getFilePath().
     Image logo = new Image(LOGO_IMAGE_URL + "?t=" + System.currentTimeMillis());
-    logo.setSize("180px", "40px");
+    logo.setSize("100%", "40px");
     logo.setStyleName("ode-Logo");
     String logoUrl = ode.getSystemConfig().getLogoUrl();
     if (!Strings.isNullOrEmpty(logoUrl)) {
       logo.addClickHandler(new WindowOpenClickHandler(logoUrl));
     }
+    
+    // button to call virtual assistent
+    Button virtualAssistentButton = new Button("Assistente virtual");
+    virtualAssistentButton.setSize("100%", "44px");
+    virtualAssistentButton.setStyleName("voice-bot-button");
+    virtualAssistentButton.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        ode.CLog("você clicou no botão do VPA");
+        ode.speechToText();
+        ode.CLog("passou pelo botão do VPA");
+      }
+    });
+
+
     panel.add(logo);
-    panel.setCellWidth(logo, "230px");
+    panel.add(virtualAssistentButton);
+
+    panel.setCellWidth(logo, "180px");
     panel.setCellHorizontalAlignment(logo, HorizontalPanel.ALIGN_LEFT);
     panel.setCellVerticalAlignment(logo, HorizontalPanel.ALIGN_MIDDLE);
   }
